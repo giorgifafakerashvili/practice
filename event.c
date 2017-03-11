@@ -286,3 +286,42 @@ ev_x_loopex_cb(struct revents, void* base) {
 
 }
 
+struct ev_x_once
+{
+  int fd;
+  void (*cb)(int, short, void *);
+  void *arg;
+};
+
+static void
+ev_x_once_cb (int revents, void *arg)
+{
+  struct ev_x_once *once = (struct ev_x_once *)arg;
+
+  once->cb (once->fd, (short)revents, once->arg);
+  free (once);
+}
+
+int event_base_once (struct event_base *base, int fd, short events, void (*cb)(int, short, void *), void *arg, struct timeval *tv)
+{
+  struct ev_x_once *once = (struct ev_x_once *)malloc (sizeof (struct ev_x_once));
+  dLOOPbase;
+
+  if (!once)
+    return -1;
+
+  once->fd  = fd;
+  once->cb  = cb;
+  once->arg = arg;
+
+  ev_once (EV_A_ fd, events & (EV_READ | EV_WRITE), ev_tv_get (tv), ev_x_once_cb, (void *)once);
+
+  return 0;
+}
+
+int event_base_priority_init (struct event_base *base, int npri)
+{
+  /*dLOOPbase;*/
+
+  return 0;
+}
