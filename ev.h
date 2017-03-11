@@ -483,6 +483,120 @@ enum {
 EV_API_DECL int ev_version_major (void) EV_THROW;
 EV_API_DECL int ev_version_minor (void) EV_THROW;
 
+V_API_DECL unsigned int ev_supported_backends (void) EV_THROW;
+EV_API_DECL unsigned int ev_recommended_backends (void) EV_THROW;
+EV_API_DECL unsigned int ev_embeddable_backends (void) EV_THROW;
+
+EV_API_DECL ev_tstamp ev_time (void) EV_THROW;
+EV_API_DECL void ev_sleep (ev_tstamp delay) EV_THROW; /* sleep for a while */
+
+
+EV_API_DECL void ev_set_allocator (void *(*cb)(void *ptr, long size) EV_THROW) EV_THROW;
+
+EV_API_DECL void ev_set_syserr_cb (void (*cb)(const char *msg) EV_THROW) EV_THROW;
+	
+
+#if EV_MULTIPLICITY
+
+EV_API_DECL struct ev_loop *ev_default_loop (unsigned int flags EV_CPP (= 0)) EV_THROW;
+
+
+#ifdef EV_API_STATIC
+EV_API_DECL struct ev_loop *ev_default_loop_ptr;
+#endif
+
+EV_INLINE struct ev_loop*
+ev_default_loop(void) EV_THROW {
+	extern struct ev_loop* ev_default_loop_ptr; 
+
+	return ev_default_loop; 
+} 
+
+EV_INLINE int 
+ev_is_default_loop(EV_P) EV_THROWN {
+	return EV_A == EV_DEFAULT_UC; 
+} 
+
+/* 
+ * Create and destroy alternative loops that dont' handle 
+ * singals 
+ */ 
+EV_API_DECL struct ev_loop *ev_loop_new (unsigned int flags EV_CPP (= 0)) EV_THROW;
+
+EV_API_DECL ev_tstamp ev_now (EV_P) EV_THROW; /* time w.r.t. timers and the eventloop, updated after each poll */
+ 
+#else
+
+EV_API_DECL int ev_default_loop (unsigned int flags EV_CPP (= 0)) EV_THROW; /* returns true when successful */
+
+EV_API_DECL ev_tstamp ev_rt_now;
+
+EV_INLINE ev_tstamp
+ev_now (void) EV_THROW
+{
+  return ev_rt_now;
+}
+
+EV_INLINE int
+ev_is_default_loop (void) EV_THROW
+{
+  return 1;
+}
+
+#endif /* multiplicity */
+
+
+/* destroy event loops, also works for the default loop */
+EV_API_DECL void ev_loop_destroy (EV_P);
+
+EV_API_DECL void ev_loop_fork (EV_P) EV_THROW;
+
+EV_API_DECL unsigned int ev_backend (EV_P) EV_THROW; /* backend in use by loop */
+
+EV_API_DECL void ev_now_update (EV_P) EV_THROW; /* update event loop time */
+
+
+#if EV_WALK_ENABLE
+EV_API_DECL void ev_walk (EV_P_ int types, void (*cb)(EV_P_ int type, void *w)) EV_THROW;
+#endif
+#endif /* prototypes */
+
+
+/* ev_run flags values */
+enum {
+  EVRUN_NOWAIT = 1, /* do not block/wait */
+  EVRUN_ONCE   = 2  /* block *once* only */
+};
+
+
+/* ev_break how values */
+enum {
+  EVBREAK_CANCEL = 0, /* undo unloop */
+  EVBREAK_ONE    = 1, /* unloop once */
+  EVBREAK_ALL    = 2  /* unloop all loops */
+};
+
+EV_API_DECL int  ev_run (EV_P_ int flags EV_CPP (= 0));
+EV_API_DECL void ev_break (EV_P_ int how EV_CPP (= EVBREAK_ONE)) EV_THROW; /* break out of the loop */
+
+
+/*
+ * ref/unref can be used to add or remove a refcount on the mainloop. every watcher
+ * keeps one reference. if you have a long-running watcher you never unregister that
+ * should not keep ev_loop from running, unref() after starting, and ref() before stopping.
+ */
+EV_API_DECL void ev_ref   (EV_P) EV_THROW;
+EV_API_DECL void ev_unref (EV_P) EV_THROW;
+
+
+
+EV_API_DECL void ev_once (EV_P_ int fd, int events, ev_tstamp timeout, void (*cb)(int revents, void *arg), void *arg) EV_THROW;
+
+
+
+
+
+
 
 
 
