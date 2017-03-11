@@ -101,6 +101,46 @@
 #if EV_CHILD_ENABLE && !EV_SIGNAL_ENABLE
 # undef EV_SIGNAL_ENABLE
 # define EV_SIGNAL_ENABLE 1
+#endif
+
+typedef double ev_tmstamp; 
+
+#ifndef EV_ATOMIC_T 
+	#include <signal.h>
+	#define EV_ATOMIC_T	sig_atomic_t volatile
 #endif 
+
+#if EV_STAT_ENABLE
+	#ifdef _WIN32
+		#include <time.h>
+		#include <sys/types.h>
+	#endif
+	#include <sys/stat.h>
+#endif
+
+#if EV_MULTIPLICITY
+struct ev_loop; 
+#define EV_P 	struct ev_loop* loop 								/* a loop as sole parameter in declaration */ 
+#define EV_P_ EV_P, 															/* a loop as first of multiple parameters */ 
+#define EV_A 	loop 																/* a loop as sole argument to a function call */ 
+#define EV_A_ EV_A, 															/* a loop as first of multiple arguments */ 
+#define EV_DEFAULT_UC  ev_default_loop_uc_ ()    /* the default loop, if initialised, as sole arg */
+#define EV_DEFAULT_UC_ EV_DEFAULT_UC,            /* the default loop as first of multiple arguments */
+#define EV_DEFAULT  ev_default_loop (0)          /* the default loop as sole arg */
+#define EV_DEFAULT_ EV_DEFAULT,                  /* the default loop as first of multiple arguments */
+#else
+#define EV_P void
+#define EV_P_
+#define EV_A
+#define EV_A_
+#define EV_DEFAULT
+#define EV_DEFAULT_
+#define EV_DEFAULT_UC
+#define EV_DEFAULT_UC_
+#undef EV_EMBED_ENABLE
+#endif
+
+
+
 
 #endif
