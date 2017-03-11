@@ -253,15 +253,36 @@ int event_pending(struct event* ev, short events, struct timeval* tv) {
 	return events & revents; 
 }
 
+
+
+
 int event_priority_init(int npri) {
 	return event_base_priority_init(ev_x_cur, npri); 
 }
 
 
+int event_priority_set (struct event* ev, int pri) {
+	ev->ev_pri = pri; 
 
+	return 0; 
+}
 
+int event_base_loop(struct event_base* base, int flags) {
+	dLOOPbase; 
 
+	return !ev_run(EV_A_ flags); 
 
+}
 
+int event_base_dispatch (struct event_base* base) {
+	return event_base_loop (base, 0); 
+} 
 
+static void 
+ev_x_loopex_cb(struct revents, void* base) {
+	dLOOPbase; 	
+
+	ev_break (EV_A__ EVBREAK_ONE); 
+
+}
 
